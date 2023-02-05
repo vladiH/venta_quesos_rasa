@@ -1,0 +1,59 @@
+version: "3.1"
+
+rules:
+
+# FAQ
+- rule: FAQ asking for cheese sugestion
+  steps:
+  - intent: ask_for_suggestion
+  - action: action_gpt3
+  
+#search cheeses
+- rule: Activate form for product stock search
+  steps:
+  - intent: product_stock
+  - action: action_deactivate_loop
+  - active_loop: null
+  - action: utter_product_stock_start
+  - action: product_stock_form
+  - active_loop: product_stock_form
+
+- rule: Submit product stock form, survey complete
+  condition:
+  - active_loop: product_stock_form
+  - slot_was_set:
+    - survey_complete: True
+  steps:
+  - action: product_stock_form
+  - active_loop: null
+  - action: action_product_search
+
+- rule: Submit product stock form, needs survey
+  condition:
+  - active_loop: product_stock_form
+  steps:
+  - action: product_stock_form
+  - active_loop: null
+  - action: action_product_search
+  - action: survey_form
+  - active_loop: survey_form
+
+# submit survey
+
+- rule: Submit survey
+  condition:
+  - active_loop: survey_form
+  steps:
+  - action: survey_form
+  - active_loop: null
+  - action: action_survey_submit
+
+# - rule: Say goodbye anytime the user says goodbye
+#   steps:
+#   - intent: goodbye
+#   - action: utter_goodbye
+
+# - rule: Say 'I am a bot' anytime the user challenges
+#   steps:
+#   - intent: bot_challenge
+#   - action: utter_iamabot

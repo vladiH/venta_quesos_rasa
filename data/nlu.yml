@@ -1,0 +1,166 @@
+version: "3.1"
+
+nlu:
+
+- lookup: cheese
+  examples: |
+    - cheddar
+    - mozzarella
+    - brie
+    - gouda
+    - parmesano
+    - roquefort
+    - camembert
+    - feta
+    - blue
+    - americano
+    - suizo
+    - andino
+
+- lookup: brand
+  examples: |
+    - Kraft
+    - Sargento
+    - BelGioioso
+    - Cabot
+    - Tillamook
+    - Boar's Head
+    - Jarlsberg
+    - Castle Cheese
+    - Roth Cheese
+    - Chimay
+    - Velandia
+    - Gloria
+    - Vargas
+
+- intent: product_stock
+  examples: |
+    - tienes queso [cheddar](cheese)?
+    - estoy buscando quesos
+    - cual es tu inventario
+    - muestrame que quesos tienes
+    - quiero ver tu inventario
+    - queso [mozzarella](cheese) de la marca [vargas](brand)
+    - que ofreces
+    - ¿Tienes queso [gouda](cheese) en stock?
+    - ¿Qué quesos tienes disponibles de la marca [BelGioioso](brand)?
+    - Estoy buscando queso [brie](cheese) para una fiesta
+    - ¿Tienes algún queso [feta](cheese) de la marca [Sirene](brand)?
+    - Me gustaría ver tu inventario de quesos asiáticos
+    - Estoy interesado en comprar queso [parmesano](cheese) de la marca [Gloria](brand)
+    - ¿Puedes mostrarme quesos [suizos](cheese) disponibles?
+
+- intent: order_cheese
+  examples: |
+    - quiero comprar queso
+    - quiero realizar un pedido
+    - vendes quesos
+
+- intent: ask_for_suggestion
+  examples: |
+    - que queso se necesita para preparar Pizza
+    - como que queso se prepara las Quesadillas
+    - el [brie](cheese) es bueno para hacer el Ají de gallina
+    - se puede preparar anticuchos con [mozzarella](cheese)
+    - que queso va mejor con la causa rellena
+    - puedo agregar queso al Ceviche?
+    - con que queso se prepara el Raclette
+    - que queso debo poner a la Parihuela
+    - ayudame a elegir 
+    - que queso no tiene mucha sal
+    - puedes sugerirme lista de quesos para preparar Tallarines verdes
+    - que queso necesito para hacer Lasagna
+    - algun queso en especifico para hacer Comida corriente
+
+# - intent: greet
+#   examples: |
+#     - hey
+#     - hello
+#     - hi
+#     - hello there
+#     - good morning
+#     - good evening
+#     - moin
+#     - hey there
+#     - let's go
+#     - hey dude
+#     - goodmorning
+#     - goodevening
+#     - good afternoon
+
+# - intent: goodbye
+#   examples: |
+#     - cu
+#     - good by
+#     - cee you later
+#     - good night
+#     - bye
+#     - goodbye
+#     - have a nice day
+#     - see you around
+#     - bye bye
+#     - see you later
+
+# - intent: affirm
+#   examples: |
+#     - yes
+#     - y
+#     - indeed
+#     - of course
+#     - that sounds good
+#     - correct
+
+# - intent: deny
+#   examples: |
+#     - no
+#     - n
+#     - never
+#     - I don't think so
+#     - don't like that
+#     - no way
+#     - not really
+
+# - intent: mood_great
+#   examples: |
+#     - perfect
+#     - great
+#     - amazing
+#     - feeling like a king
+#     - wonderful
+#     - I am feeling very good
+#     - I am great
+#     - I am amazing
+#     - I am going to save the world
+#     - super stoked
+#     - extremely good
+#     - so so perfect
+#     - so good
+#     - so perfect
+
+# - intent: mood_unhappy
+#   examples: |
+#     - my day was horrible
+#     - I am sad
+#     - I don't feel very well
+#     - I am disappointed
+#     - super sad
+#     - I'm so sad
+#     - sad
+#     - very sad
+#     - unhappy
+#     - not good
+#     - not very good
+#     - extremly sad
+#     - so saad
+#     - so sad
+
+# - intent: bot_challenge
+#   examples: |
+#     - are you a bot?
+#     - are you a human?
+#     - am I talking to a bot?
+#     - am I talking to a human?
+
+
+
+

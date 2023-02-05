@@ -1,0 +1,143 @@
+version: "3.1"
+
+intents:
+  - product_stock
+  - order_cheese
+  # - greet
+  # - goodbye
+  # - affirm
+  # - deny
+  # - mood_great
+  # - mood_unhappy
+  # - bot_challenge
+
+entities:
+- cheese
+- brand
+- number
+
+slots:
+  cheese:
+    type: text
+    influence_conversation: false
+    mappings:
+    - entity: cheese
+      type: from_entity
+      conditions:
+      - active_loop: product_stock_form
+    - type: from_entity
+      entity: cheese
+
+  brand:
+    type: text
+    influence_conversation: false
+    mappings:
+    - entity: brand
+      type: from_entity
+      conditions:
+      - active_loop: product_stock_form
+  
+  rating:
+    type: text
+    influence_conversation: false
+    mappings:
+    - entity: number
+      type: from_entity
+      conditions:
+      - active_loop: survey_form
+
+  open_feedback:
+    type: text
+    influence_conversation: false
+    mappings:
+    - type: from_text
+      conditions:
+      - active_loop: survey_form
+        requested_slot: open_feedback
+
+  survey_complete:
+    type: bool
+    influence_conversation: true
+    mappings:
+    - type: custom
+
+actions:
+- action_product_search
+- action_survey_submit
+- action_gpt3
+
+responses:
+  utter_order_cheese:
+  - text: "Lo siento, Unicamente puedo buscar su producto en el inventario, ver el estado de un pedido o incluso realizar un cambio en ese pedido.\n 
+          ¡Visite nuestro sitio web aquí!. https://el_queso_sabroso.com/inventario"
+
+  utter_product_stock_start:
+  - text: Vamos!!, puedo ayudarte a encontrar el queso mas delicioso
+
+  utter_ask_product_stock_form_cheese:
+  - text: Que queso estas buscando?
+
+  utter_ask_product_stock_form_brand:
+  - text: Alguna marca en especifica?
+
+  utter_in_stock:
+  - text: "Estas de suerte, hemos encontrado este producto en nuestra tienda :)"
+
+  utter_no_stock:
+  - text: "Disculpa, no encontramos tu busqueda :( ."
+
+  utter_ask_survey_form_rating:
+  - buttons:
+    - payload: '1'
+      title: '1'
+    - payload: '2'
+      title: '2'
+    - payload: '3'
+      title: '3'
+    - payload: '4'
+      title: '4'
+    - payload: '5'
+      title: '5'
+    text: En escala del 1 al 5, Cuanto calificas nuestra atención?
+
+  utter_ask_survey_form_open_feedback:
+  - text: Estamos dispuestos a mejorar, tu opinion nos importa\n. Hay algo que nos quieras decir?
+
+  utter_survey_end:
+  - text: Gracias por tu feedback!
+  
+  utter_greet:
+  - text: "Hey! How are you?"
+
+  # utter_cheer_up:
+  # - text: "Here is something to cheer you up:"
+  #   image: "https://i.imgur.com/nGF1K8f.jpg"
+
+  # utter_did_that_help:
+  # - text: "Did that help you?"
+
+  # utter_happy:
+  # - text: "Great, carry on!"
+
+  # utter_goodbye:
+  # - text: "Bye"
+
+  # utter_iamabot:
+  # - text: "I am a bot, powered by Rasa."
+
+forms:
+  product_stock_form:
+      ignored_intents: []
+      required_slots:
+      - cheese
+      - brand
+  
+  survey_form:
+    ignored_intents: []
+    required_slots:
+    - rating
+    - open_feedback
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
