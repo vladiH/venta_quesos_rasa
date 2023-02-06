@@ -4,7 +4,7 @@ recipe: default.v1
 
 # Configuration for Rasa NLU.
 # https://rasa.com/docs/rasa/nlu/components/
-language: en
+language: es
 
 pipeline:
 # # No configuration for the NLU pipeline was provided. The following default pipeline was used to train your model.
@@ -29,6 +29,7 @@ pipeline:
 #     threshold: 0.3
 #     ambiguity_threshold: 0.1
   - name: WhitespaceTokenizer
+  - name: RegexEntityExtractor
   - name: RegexFeaturizer
   - name: LexicalSyntacticFeaturizer
   - name: CountVectorsFeaturizer
@@ -39,7 +40,6 @@ pipeline:
   - name: DIETClassifier
     epochs: 100
   - name: EntitySynonymMapper
-  # - name: RegexEntityExtractor
   - name: ResponseSelector
     epochs: 100
     retrieval_intent: faq
@@ -64,9 +64,9 @@ policies:
 #   - name: TEDPolicy
 #     max_history: 5
 #     epochs: 100
-#     constrain_similarities: true
   - name: MemoizationPolicy
   - name: TEDPolicy
+    constrain_similarities: true
     max_history: 5
     epochs: 100
   - name: RulePolicy

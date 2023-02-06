@@ -3,7 +3,10 @@ version: "3.1"
 intents:
   - product_stock
   - order_cheese
-  # - greet
+  - order_status
+  - deny
+  - greet
+  - ask_for_suggestion
   # - goodbye
   # - affirm
   # - deny
@@ -15,6 +18,7 @@ entities:
 - cheese
 - brand
 - number
+- email
 
 slots:
   cheese:
@@ -37,6 +41,31 @@ slots:
       conditions:
       - active_loop: product_stock_form
   
+  email:
+    type: text
+    influence_conversation: false
+    mappings:
+    - entity: email
+      type: from_entity
+      conditions:
+      - active_loop: order_status_form
+        requested_slot: email
+      # - active_loop: cancel_form
+      # - active_loop: product_updates_form
+    # - intent:
+    #   - inform
+    #   type: from_text
+    #   conditions:
+    #   - active_loop: order_status_form
+    #     requested_slot: email
+    # - entity: email
+    #   not_intent: product_updates
+    #   type: from_entity
+    #   conditions:
+    #   - active_loop: return_form
+    # - type: from_entity
+    #   entity: email
+
   rating:
     type: text
     influence_conversation: false
@@ -64,27 +93,40 @@ slots:
 actions:
 - action_product_search
 - action_survey_submit
+- action_order_status
 - action_gpt3
 
 responses:
   utter_order_cheese:
-  - text: "Lo siento, Unicamente puedo buscar su producto en el inventario, ver el estado de un pedido o incluso realizar un cambio en ese pedido.\n 
-          ¡Visite nuestro sitio web aquí!. https://el_queso_sabroso.com/inventario"
+  - text: "Lo siento, únicamente puedo buscar su producto en el inventario, ver el estado de un pedido o incluso realizar un cambio en ese pedido.\n 
+          ¡Visite nuestro sitio web, aquí! https://el_queso_sabroso.com/inventario"
 
   utter_product_stock_start:
-  - text: Vamos!!, puedo ayudarte a encontrar el queso mas delicioso
+  - text: ¡Aquí Vamos!!
 
   utter_ask_product_stock_form_cheese:
-  - text: Que queso estas buscando?
+  - text: ¿Algún queso en especial?
 
   utter_ask_product_stock_form_brand:
-  - text: Alguna marca en especifica?
+  - text: ¿Alguna marca en especifica?
 
   utter_in_stock:
   - text: "Estas de suerte, hemos encontrado este producto en nuestra tienda :)"
 
+  utter_in_stocks:
+  - text: "Hemos encontrado esta lista de productos que coincide con tu búsqueda :)"
+
   utter_no_stock:
-  - text: "Disculpa, no encontramos tu busqueda :( ."
+  - text: "Disculpa, no encontramos el queso {cheese} en nuestro inventario :(."
+
+  utter_ask_order_status_form_email:
+  - text: Por favor, ¿Cuál es su dirección de correo electrónico para localizar tu pedido?
+
+  utter_order_status:
+  - text: "{email}, el estado de tu pedido es {status}."
+
+  utter_no_order:
+  - text: Upss, no tenemos ninguna orden asociada a este corre electrónico
 
   utter_ask_survey_form_rating:
   - buttons:
@@ -101,13 +143,29 @@ responses:
     text: En escala del 1 al 5, Cuanto calificas nuestra atención?
 
   utter_ask_survey_form_open_feedback:
-  - text: Estamos dispuestos a mejorar, tu opinion nos importa\n. Hay algo que nos quieras decir?
+  - text: "Estamos dispuestos a mejorar, tu opinion nos importa\n. Hay algo que nos quieras decir?"
 
   utter_survey_end:
   - text: Gracias por tu feedback!
-  
+
+  utter_start_over:
+  - text: Ok, ¿Y Ahora?
+
+  utter_default:
+  - text: "No estoy entendiendo." 
+  - text: "um, ¿podrías estructurarlo mucho mejor?, no logro comprenderte"
+  - text: "No entiendo, lo siento"
+  - text: "Al parecer ya me he perdido"
+
   utter_greet:
-  - text: "Hey! How are you?"
+  - buttons:
+    - payload: ver mi orden
+      title: Estado de mi orden
+    - payload: inventario
+      title: Inventario
+    - payload: ordenar
+      title: Comprar
+    text: "¡Hola!, Soy YuriBot, a partir de ahora voy a ser tu asistente. ¿Puedo ayudarte en algo?"
 
   # utter_cheer_up:
   # - text: "Here is something to cheer you up:"
@@ -126,6 +184,11 @@ responses:
   # - text: "I am a bot, powered by Rasa."
 
 forms:
+  order_status_form:
+    ignored_intents: []
+    required_slots:
+    - email
+
   product_stock_form:
       ignored_intents: []
       required_slots:

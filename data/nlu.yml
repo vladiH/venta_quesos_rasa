@@ -33,6 +33,30 @@ nlu:
     - Gloria
     - Vargas
 
+- regex: email
+  examples: |
+    - \b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b
+
+- intent: order_status
+  examples: |
+    - ya salio mi orden?
+    - que es de mi pedido, soy [prueba@outlook.com](email)
+    - como va mi pedido
+    - mi orden aun no llega
+    - consultar el estado de mi pedido
+    - cuando van a entrar mi pedido
+    - cuando van a llegar aquí
+    - Me gustaría comprobar el estado de mi pedido por favor
+    - comprobar estado
+    - Me gustaría una actualización de mi pedido
+    - Consultar el estado de mi pedido
+    - Aún no he recibido mi pedido, ¿podemos comprobarlo?
+    - ¿Donde esta mi orden?
+    - como va el estado de mi orden, mo correo es [colab@google.com](email)
+    - Quiero consultar el estado de mi pedido
+    - realmente puedo comprobar el estado de mi pedido
+    - estado de mi pedido, soy [ejemplo@rasa.com](email)
+
 - intent: product_stock
   examples: |
     - tienes queso [cheddar](cheese)?
@@ -55,6 +79,7 @@ nlu:
     - quiero comprar queso
     - quiero realizar un pedido
     - vendes quesos
+    - vendeme queso [andino](cheese)
 
 - intent: ask_for_suggestion
   examples: |
@@ -72,21 +97,32 @@ nlu:
     - que queso necesito para hacer Lasagna
     - algun queso en especifico para hacer Comida corriente
 
-# - intent: greet
-#   examples: |
-#     - hey
-#     - hello
-#     - hi
-#     - hello there
-#     - good morning
-#     - good evening
-#     - moin
-#     - hey there
-#     - let's go
-#     - hey dude
-#     - goodmorning
-#     - goodevening
-#     - good afternoon
+- intent: deny
+  examples: |
+    - para
+    - cancela
+    - no sigas
+    - detente
+    - para
+    - de ninguna manera
+    - stop
+    - Nah
+    - nope
+    - cancelar
+
+- intent: greet
+  examples: |
+    - hey
+    - hello
+    - hi
+    - hola
+    - alguien
+    - buenos dias
+    - buenas tardes
+    - hay alguien?
+    - let's go
+    - hey
+    - buenas noches
 
 # - intent: goodbye
 #   examples: |

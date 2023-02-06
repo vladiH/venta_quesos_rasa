@@ -11,6 +11,7 @@ import sqlite3
 # change this to the location of your SQLite file
 path_to_db = "actions/quesos.db"
 
+COLUMNS_INVENTORY = ['Queso', 'Marca', 'Precio', 'Kg']
 class ActionProductSearch(Action):
     def name(self) -> Text:
         return "action_product_search"
@@ -33,10 +34,20 @@ class ActionProductSearch(Action):
         cursor.execute("SELECT * FROM inventory WHERE cheese=? AND brand=?", product)
         
         # retrieve sqlite row
-        data_row = cursor.fetchone()
-        if data_row:
+        data_rows = cursor.fetchall()
+        if len(data_rows)==1:
             # provide in stock message
             dispatcher.utter_message(template="utter_in_stock")
+            dispatcher.utter_message(text='\n'.join(['{}: {}'.format(k,v) for (k, v) in zip(COLUMNS_INVENTORY, data_rows)]))
+            connection.close()
+            slots_to_reset = ["cheese", "brand"]
+            return [SlotSet(slot, None) for slot in slots_to_reset]
+
+        elif len(data_rows)>1:
+            # provide in stock message
+            dispatcher.utter_message(template="utter_in_stocks")
+            for row in data_rows:
+                dispatcher.utter_message(text='\n'.join(['{}: {}'.format(k,v) for (k, v) in zip(COLUMNS_INVENTORY, row)]))
             connection.close()
             slots_to_reset = ["cheese", "brand"]
             return [SlotSet(slot, None) for slot in slots_to_reset]
@@ -47,6 +58,42 @@ class ActionProductSearch(Action):
             slots_to_reset = ["cheese", "brand"]
             return [SlotSet(slot, None) for slot in slots_to_reset]
 
+class OrderStatus(Action):
+    def name(self) -> Text:
+        return "action_order_status"
+
+    def run(
+        self,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> List[Dict[Text, Any]]:
+
+        # connect to DB
+        connection = sqlite3.connect(path_to_db)
+        cursor = connection.cursor()
+
+        # get email slot
+        order_email = (tracker.get_slot("email"),)
+
+        # retrieve row based on email
+        cursor.execute("SELECT * FROM orders WHERE order_email=?", order_email)
+        data_row = cursor.fetchone()
+
+        if data_row:
+            # convert tuple to list
+            data_list = list(data_row)
+
+            # respond with order status
+            dispatcher.utter_message(template="utter_order_status", status=data_list[5])
+            connection.close()
+            return []
+        else:
+            # db didn't have an entry with this email
+            dispatcher.utter_message(template="utter_no_order")
+            connection.close()
+            return []
+            
 class SurveySubmit(Action):
     def name(self) -> Text:
         return "action_survey_submit"

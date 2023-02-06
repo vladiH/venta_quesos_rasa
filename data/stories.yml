@@ -2,6 +2,29 @@ version: "3.1"
 
 stories:
 
+- story: init
+  steps:
+  - intent: greet
+  - action: utter_greet
+
+- story: User stops product_stock
+  steps:
+  - active_loop: product_stock_form
+  - intent: deny
+  - action: utter_start_over
+  - action: utter_greet
+  - action: action_deactivate_loop
+  - active_loop: null
+
+- story: User stops order_status
+  steps:
+  - active_loop: order_status_form
+  - intent: deny
+  - action: utter_start_over
+  - action: utter_greet
+  - action: action_deactivate_loop
+  - active_loop: null
+
 - story: order cheeses
   steps:
   - intent: order_cheese
