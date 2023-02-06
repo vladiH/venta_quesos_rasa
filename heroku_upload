@@ -1,0 +1,3 @@
+heroku create rahyuribot
+
+container:push web -a yuri_bot
