@@ -1,4 +1,4 @@
-from typing import Any, Text, Dict, List
+from typing import Any, Text, Dict, List, Union
 from rasa_sdk import Tracker, FormValidationAction, Action, ValidationAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.events import EventType, SlotSet
@@ -11,10 +11,17 @@ import sqlite3
 # change this to the location of your SQLite file
 path_to_db = "actions/quesos.db"
 
-COLUMNS_INVENTORY = ['Queso', 'Marca', 'Precio', 'Kg']
+COLUMNS_INVENTORY = ['QUESO', 'MARCA', 'PRECIO', 'Kg']
 class ActionProductSearch(Action):
     def name(self) -> Text:
         return "action_product_search"
+    
+    @staticmethod 
+    def required_slots(tracker): 
+        return ["brand"]
+
+    def slot_mapping(self) -> Dict[Text, Union[Dict,List[Dict]]]:
+        return {"brand": [self.from_text()]}
 
     def run(
         self,
@@ -28,10 +35,10 @@ class ActionProductSearch(Action):
         cursor = connection.cursor()
 
         # get slots and save as tuple
-        product = [(tracker.get_slot("cheese")), (tracker.get_slot("brand"))]
+        product = [(tracker.get_slot("cheese").lower()), (tracker.get_slot("brand").lower())]
         
         # place cursor on correct row based on search criteria
-        cursor.execute("SELECT * FROM inventory WHERE cheese=? AND brand=?", product)
+        cursor.execute("SELECT * FROM inventory WHERE cheese=? OR brand=?", product)
         
         # retrieve sqlite row
         data_rows = cursor.fetchall()
@@ -74,7 +81,7 @@ class OrderStatus(Action):
         cursor = connection.cursor()
 
         # get email slot
-        order_email = (tracker.get_slot("email"),)
+        order_email = (tracker.get_slot("email").lower(),)
 
         # retrieve row based on email
         cursor.execute("SELECT * FROM orders WHERE order_email=?", order_email)
@@ -85,14 +92,15 @@ class OrderStatus(Action):
             data_list = list(data_row)
 
             # respond with order status
-            dispatcher.utter_message(template="utter_order_status", status=data_list[5])
+            dispatcher.utter_message(template="utter_order_status", status=data_list[5], date=data_list[0], code=data_list[1])
+            dispatcher.utter_message(template="utter_success_presubmit")
             connection.close()
-            return []
+            return [SlotSet("is_ok", True), SlotSet("email", None)]
         else:
             # db didn't have an entry with this email
             dispatcher.utter_message(template="utter_no_order")
             connection.close()
-            return []
+            return [SlotSet("email", None)]
             
 class SurveySubmit(Action):
     def name(self) -> Text:

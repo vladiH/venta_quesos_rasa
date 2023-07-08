@@ -6,8 +6,10 @@ intents:
   - order_status
   - deny
   - greet
-  - ask_for_suggestion
-  # - goodbye
+  - help
+  - user_feedback
+  - goodbye
+  - affirm
   # - affirm
   # - deny
   # - mood_great
@@ -66,25 +68,32 @@ slots:
     # - type: from_entity
     #   entity: email
 
-  rating:
-    type: text
-    influence_conversation: false
-    mappings:
-    - entity: number
-      type: from_entity
-      conditions:
-      - active_loop: survey_form
+  # rating:
+  #   type: text
+  #   influence_conversation: false
+  #   mappings:
+  #   - entity: number
+  #     type: from_entity
+  #     conditions:
+  #     - active_loop: survey_form
 
-  open_feedback:
+  
+  feedback:
     type: text
     influence_conversation: false
     mappings:
     - type: from_text
       conditions:
       - active_loop: survey_form
-        requested_slot: open_feedback
+        requested_slot: feedback
 
   survey_complete:
+    type: bool
+    influence_conversation: true
+    mappings:
+    - type: custom
+
+  is_ok:
     type: bool
     influence_conversation: true
     mappings:
@@ -98,11 +107,11 @@ actions:
 
 responses:
   utter_order_cheese:
-  - text: "Lo siento, únicamente puedo buscar su producto en el inventario, ver el estado de un pedido o incluso realizar un cambio en ese pedido.\n 
-          ¡Visite nuestro sitio web, aquí! https://el_queso_sabroso.com/inventario"
+  - text: "Por este medio unicamente puedes consultar el estado de tu compra, comprobar la existencia de tu producto en nuestro inventario y preguntar algunas curiosidades con respecto a los quesos.\n\n 
+          ¡Visite nuestro sitio web, aquí: https://el_queso_sabroso_esta_aqui.com/inventario"
 
   utter_product_stock_start:
-  - text: ¡Aquí Vamos!!
+  - text: Me alegra tu interes por nuestros productos, te estare guiando para encontrar el mejor Queso.
 
   utter_ask_product_stock_form_cheese:
   - text: ¿Algún queso en especial?
@@ -117,39 +126,47 @@ responses:
   - text: "Hemos encontrado esta lista de productos que coincide con tu búsqueda :)"
 
   utter_no_stock:
-  - text: "Disculpa, no encontramos el queso {cheese} en nuestro inventario :(."
+  - text: "Disculpa, no encontramos el queso {cheese} en nuestro inventario :("
 
   utter_ask_order_status_form_email:
-  - text: Por favor, ¿Cuál es su dirección de correo electrónico para localizar tu pedido?
+  - text: Por favor, ¿Cuál es su dirección de correo electrónico para localizar tu orden?
 
   utter_order_status:
-  - text: "{email}, el estado de tu pedido es {status}."
+  - text: "{email}, el estado de tu pedido es {status}, se ha modificado el {date} y tu numero de orden es {code}"
 
   utter_no_order:
   - text: Upss, no tenemos ninguna orden asociada a este corre electrónico
 
-  utter_ask_survey_form_rating:
-  - buttons:
-    - payload: '1'
-      title: '1'
-    - payload: '2'
-      title: '2'
-    - payload: '3'
-      title: '3'
-    - payload: '4'
-      title: '4'
-    - payload: '5'
-      title: '5'
-    text: En escala del 1 al 5, Cuanto calificas nuestra atención?
+  utter_success_presubmit:
+  - text: "Espero haberte ayudado, ¿Tienes alguna pregunta mas? "
 
-  utter_ask_survey_form_open_feedback:
-  - text: "Estamos dispuestos a mejorar, tu opinion nos importa\n. Hay algo que nos quieras decir?"
+  utter_ask_survey_form_feedback:
+  - buttons:
+    - payload: 'Recontra malo'
+      title: '1'
+    - payload: 'Malo'
+      title: '2'
+    - payload: 'Regular'
+      title: '3'
+    - payload: 'Bueno'
+      title: '4'
+    - payload: 'Muy bueno'
+      title: '5'
+    text: ¿Que te parecio este canal de atención?
+
+  # utter_ask_survey_form_open_feedback:
+  # - text: "Estamos dispuestos a mejorar, tu opinion nos importa\n. ¿Hay algo que nos quieras decir?"
 
   utter_survey_end:
-  - text: Gracias por tu feedback!
+  - text: Gracias por dejar tu comentario. Hasta pronto!!.
+  - text: Gracias por dejar tu comentario. Bye.
 
   utter_start_over:
   - text: Ok, ¿Y Ahora?
+
+  utter_help:
+  - text: "Encantado de ayudarte, recuerda esta seccion es unicamente para realizar preguntas respecto a quesos. 
+            Por ejemplo, puedes pedir una receta con el queso que esta llevando o pedir una descripcion" 
 
   utter_default:
   - text: "No estoy entendiendo." 
@@ -159,13 +176,24 @@ responses:
 
   utter_greet:
   - buttons:
-    - payload: ver mi orden
-      title: Estado de mi orden
-    - payload: inventario
+    - payload: quiero ver el estado de mi producto
+      title: Estado
+    - payload: muestrame tu inventario
       title: Inventario
-    - payload: ordenar
+    - payload: quiero comprar
       title: Comprar
-    text: "¡Hola!, Soy YuriBot, a partir de ahora voy a ser tu asistente. ¿Puedo ayudarte en algo?"
+    text: "¡Hola!, ¿Puedo ayudarte en algo?"
+  
+  utter_show_options:
+  - buttons:
+    - payload: quiero ver el estado de mi producto
+      title: Estado
+    - payload: muestrame tu inventario
+      title: Inventario
+    - payload: quiero comprar
+      title: Comprar
+    text: "Elige una opción"
+  
 
   # utter_cheer_up:
   # - text: "Here is something to cheer you up:"
@@ -177,8 +205,8 @@ responses:
   # utter_happy:
   # - text: "Great, carry on!"
 
-  # utter_goodbye:
-  # - text: "Bye"
+  utter_goodbye:
+  - text: "Bye"
 
   # utter_iamabot:
   # - text: "I am a bot, powered by Rasa."
@@ -196,10 +224,10 @@ forms:
       - brand
   
   survey_form:
-    ignored_intents: []
+    ignored_intents: [deny, affirm]
     required_slots:
-    - rating
-    - open_feedback
+    # - rating
+    - feedback
 
 session_config:
   session_expiration_time: 60

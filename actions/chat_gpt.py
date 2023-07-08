@@ -16,7 +16,7 @@ class ActionGPT3(Action):
         print(request)
         response = openai.Completion.create(
             engine="text-davinci-003",
-            prompt="a esta pregunta: {} Responde el tipo de queso que necesita y si puedes la marca. Todo en español".format(request),
+            prompt="{}. Responde la pregunta, todo en español".format(request),
             max_tokens=1024,
             n=1,
             stop=None,

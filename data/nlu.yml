@@ -16,6 +16,7 @@ nlu:
     - americano
     - suizo
     - andino
+    - Cheedar
 
 - lookup: brand
   examples: |
@@ -32,11 +33,13 @@ nlu:
     - Velandia
     - Gloria
     - Vargas
+    - Galbani
+    - galbani
 
 - regex: email
   examples: |
     - \b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b
-
+    
 - intent: order_status
   examples: |
     - ya salio mi orden?
@@ -52,7 +55,7 @@ nlu:
     - Consultar el estado de mi pedido
     - Aún no he recibido mi pedido, ¿podemos comprobarlo?
     - ¿Donde esta mi orden?
-    - como va el estado de mi orden, mo correo es [colab@google.com](email)
+    - como va el estado de mi orden, mi correo es [colab@google.com](email)
     - Quiero consultar el estado de mi pedido
     - realmente puedo comprobar el estado de mi pedido
     - estado de mi pedido, soy [ejemplo@rasa.com](email)
@@ -62,17 +65,23 @@ nlu:
     - tienes queso [cheddar](cheese)?
     - estoy buscando quesos
     - cual es tu inventario
-    - muestrame que quesos tienes
+    - muestrame que tipos de queso tienes
     - quiero ver tu inventario
     - queso [mozzarella](cheese) de la marca [vargas](brand)
     - que ofreces
     - ¿Tienes queso [gouda](cheese) en stock?
-    - ¿Qué quesos tienes disponibles de la marca [BelGioioso](brand)?
+    - ¿Qué quesos tienes disponibles en la marca [BelGioioso](brand)?
     - Estoy buscando queso [brie](cheese) para una fiesta
     - ¿Tienes algún queso [feta](cheese) de la marca [Sirene](brand)?
     - Me gustaría ver tu inventario de quesos asiáticos
     - Estoy interesado en comprar queso [parmesano](cheese) de la marca [Gloria](brand)
     - ¿Puedes mostrarme quesos [suizos](cheese) disponibles?
+    - necesito queso [cheedar](cheese) de la marca [President](brand)
+    - en la mara [Galbani][brand]
+    - en la marca [galbani][brand]
+    - quiero saber cuanto esta el [gouda](cheese) en la marca [cabot](brand)
+    - cuanto esta la [mozzarella](cheese)
+    - cuanto esta el queso [roquefort](cheese) de la marca [Kraft](brand)
 
 - intent: order_cheese
   examples: |
@@ -80,22 +89,20 @@ nlu:
     - quiero realizar un pedido
     - vendes quesos
     - vendeme queso [andino](cheese)
+    - comprar queso
+    - realizar pedido
+    - quiero comprar
 
-- intent: ask_for_suggestion
+- intent: help
   examples: |
-    - que queso se necesita para preparar Pizza
-    - como que queso se prepara las Quesadillas
-    - el [brie](cheese) es bueno para hacer el Ají de gallina
-    - se puede preparar anticuchos con [mozzarella](cheese)
-    - que queso va mejor con la causa rellena
-    - puedo agregar queso al Ceviche?
-    - con que queso se prepara el Raclette
-    - que queso debo poner a la Parihuela
-    - ayudame a elegir 
-    - que queso no tiene mucha sal
-    - puedes sugerirme lista de quesos para preparar Tallarines verdes
-    - que queso necesito para hacer Lasagna
-    - algun queso en especifico para hacer Comida corriente
+    - ayuda, como hacer pan con jamon 
+    - pregunta, algun queso especial para hacer pizza 
+    - sugerencia, que me sugieres para cocinar lasagna
+    - una consulta, puedo poner queso parmesano
+    - consulta, se puede usar queso andino en lugar de brie
+    - me ayudas, en una receta para preparar aji de gallina
+    - ayudame, como hacer pizza usando gouda
+    - recetame un plato con queso americano
 
 - intent: deny
   examples: |
@@ -109,6 +116,31 @@ nlu:
     - Nah
     - nope
     - cancelar
+    - no
+    - ninguna
+    - nada
+  
+- intent: affirm
+  examples: |
+    - si
+    - sip
+    - claro
+    - por supuesto
+
+- intent: user_feedback
+  examples: |
+    - Recontra malo
+    - regular
+    - Regular
+    - pesimo
+    - malo
+    - super malo
+    - muy bueno
+    - super bueno
+    - de gran ayuda
+    - bueno
+    - por mejorar
+    - falta mejorar
 
 - intent: greet
   examples: |
@@ -124,78 +156,18 @@ nlu:
     - hey
     - buenas noches
 
-# - intent: goodbye
-#   examples: |
-#     - cu
-#     - good by
-#     - cee you later
-#     - good night
-#     - bye
-#     - goodbye
-#     - have a nice day
-#     - see you around
-#     - bye bye
-#     - see you later
-
-# - intent: affirm
-#   examples: |
-#     - yes
-#     - y
-#     - indeed
-#     - of course
-#     - that sounds good
-#     - correct
-
-# - intent: deny
-#   examples: |
-#     - no
-#     - n
-#     - never
-#     - I don't think so
-#     - don't like that
-#     - no way
-#     - not really
-
-# - intent: mood_great
-#   examples: |
-#     - perfect
-#     - great
-#     - amazing
-#     - feeling like a king
-#     - wonderful
-#     - I am feeling very good
-#     - I am great
-#     - I am amazing
-#     - I am going to save the world
-#     - super stoked
-#     - extremely good
-#     - so so perfect
-#     - so good
-#     - so perfect
-
-# - intent: mood_unhappy
-#   examples: |
-#     - my day was horrible
-#     - I am sad
-#     - I don't feel very well
-#     - I am disappointed
-#     - super sad
-#     - I'm so sad
-#     - sad
-#     - very sad
-#     - unhappy
-#     - not good
-#     - not very good
-#     - extremly sad
-#     - so saad
-#     - so sad
-
-# - intent: bot_challenge
-#   examples: |
-#     - are you a bot?
-#     - are you a human?
-#     - am I talking to a bot?
-#     - am I talking to a human?
+- intent: goodbye
+  examples: |
+    - cu
+    - good by
+    - adios
+    - chau
+    - bye
+    - goodbye
+    - que tengas bun dia
+    - hasta pronto
+    - bye bye
+    - nos vemos
 
 
 

@@ -5,8 +5,9 @@ rules:
 # FAQ
 - rule: FAQ asking for cheese sugestion
   steps:
-  - intent: ask_for_suggestion
+  - intent: help
   - action: action_gpt3
+
 
 # order status
 - rule: Activate email form for order status
@@ -27,15 +28,27 @@ rules:
   - active_loop: null
   - action: action_order_status
 
-- rule: Submit order status form, needs survey
+- rule: Submit order status form, no more questions
   condition:
   - active_loop: order_status_form
   steps:
   - action: order_status_form
   - active_loop: null
   - action: action_order_status
+  - intent: deny
   - action: survey_form
   - active_loop: survey_form
+
+- rule: Submit order status form, more questions
+  condition:
+  - active_loop: order_status_form
+  steps:
+  - action: order_status_form
+  - active_loop: null
+  - action: action_order_status
+  - intent: affirm
+  - action: utter_show_options
+  
 
 #search cheeses
 - rule: Activate form for product stock search
@@ -50,37 +63,27 @@ rules:
 - rule: Submit product stock form, survey complete
   condition:
   - active_loop: product_stock_form
-  - slot_was_set:
-    - survey_complete: True
   steps:
   - action: product_stock_form
   - active_loop: null
   - action: action_product_search
-
-- rule: Submit product stock form, needs survey
-  condition:
-  - active_loop: product_stock_form
-  steps:
-  - action: product_stock_form
-  - active_loop: null
-  - action: action_product_search
-  # - action: survey_form
-  # - active_loop: survey_form
 
 # submit survey
 
-- rule: Submit survey
+- rule: Submit survey if all is ok
   condition:
   - active_loop: survey_form
+  - slot_was_set:
+    - is_ok: True
   steps:
   - action: survey_form
   - active_loop: null
   - action: action_survey_submit
 
-# - rule: Say goodbye anytime the user says goodbye
-#   steps:
-#   - intent: goodbye
-#   - action: utter_goodbye
+- rule: Say goodbye anytime the user says goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
 
 # - rule: Say 'I am a bot' anytime the user challenges
 #   steps:
